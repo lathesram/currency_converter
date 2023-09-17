@@ -38,9 +38,9 @@ export class ExchangeRateAPIService {
   // }
 
   // Always returns USD as Base URL. FreePlan :-(
-  getLatest(): Observable<LatestInfo> {
+  getLatest(): Observable<unknown> {
     const params = new HttpParams().set('app_id', this.app_id);
-    return this.http.get<LatestInfo>(`${BASE_URL}${Urls.get_latest_info}`, {
+    return this.http.get(`${BASE_URL}${Urls.get_latest_info}`, {
       params,
     });
   }
