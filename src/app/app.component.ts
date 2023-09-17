@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ExchangeRateAPIService } from './api.service';
+import { ExchangeRateAPIService } from './api/api.service';
 
 @Component({
   selector: 'app-root',
@@ -12,8 +12,22 @@ export class AppComponent implements OnInit {
   constructor(private exchangeRateAPIService: ExchangeRateAPIService) {}
 
   ngOnInit(): void {
-    this.exchangeRateAPIService
-      .getLatest()
-      .subscribe((value) => console.log(value));
+    // This is only to test the function. Remove Below.
+
+    this.exchangeRateAPIService.getCurrencies().subscribe((value) => {
+      console.log(value);
+    });
+
+    // const payload: ConvertPayload = {
+    //   to: 'GBP',
+    //   from: 'EUR',
+    //   value: '100',
+    // };
+
+    // this.exchangeRateAPIService
+    //   .getConvertedResults(payload)
+    //   .subscribe((value) => console.log(value));
+
+    this.exchangeRateAPIService.getLatest().subscribe(value => console.log(value));
   }
 }
