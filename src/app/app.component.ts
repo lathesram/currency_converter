@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ExchangeRateAPIService } from './api/api.service';
 import { ConvertPayload } from './api/api.enum';
 import { CurrencyConverterService } from './currency_converter/currency-conveter.service';
+import { Subject, takeUntil } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -10,34 +11,21 @@ import { CurrencyConverterService } from './currency_converter/currency-conveter
 })
 export class AppComponent implements OnInit {
   title = 'currency-converter';
+  isLoading = false;
+  destory$ = new Subject();
 
-  constructor(private exchangeRateAPIService: ExchangeRateAPIService, private currencyConverterService: CurrencyConverterService) {}
+  constructor(
+    private exchangeRateAPIService: ExchangeRateAPIService,
+    private currencyConverterService: CurrencyConverterService,
+  ) {}
 
   ngOnInit(): void {
-    // This is only to test the function. Remove Below.
+    this.currencyConverterService.isLoadingSubject$
+      .pipe(takeUntil(this.destory$))
+      .subscribe((value) => (this.isLoading = value));
+  }
 
-    this.exchangeRateAPIService.getCurrencies().subscribe((value) => {
-      console.log(value);
-    });
-
-    const payload: ConvertPayload = {
-      to: 'GBP',
-      from: 'EUR',
-      value: '100',
-    };
-
-    // this.exchangeRateAPIService
-    //   .getConvertedResults(payload)
-    //   .subscribe((value) => console.log(value));
-
-    this.exchangeRateAPIService.getLatest().subscribe(value => console.log(value));
-    this.currencyConverterService.convert_currency(payload).subscribe({
-      next: (value) => {
-        console.log(value);
-      },
-      error: (err) => {
-        console.log(err);
-      },
-    });
+  ngOnDestroy(): void {
+    this.destory$.next(null);
   }
 }

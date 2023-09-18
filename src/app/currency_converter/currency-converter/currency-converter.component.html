@@ -1,1 +1,32 @@
-<p>currency-converter works!</p>
+<div class="row">
+    <div class="col-md-12" style="display: flex; justify-content: center; flex-wrap: nowrap; margin-top: 5%;">
+        <form [formGroup]="currencyConverterForm">
+          <mat-form-field>
+            <mat-label>From Currency</mat-label>
+            <mat-select formControlName="fromCurrency">
+              <mat-option
+                *ngFor="let currency of currencyList"
+                [value]="currency.shortHand"
+                >{{ currency.shortHand }} - {{ currency.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>To Currency</mat-label>
+            <mat-select formControlName="toCurrency">
+              <mat-option
+                *ngFor="let currency of currencyList"
+                [value]="currency.shortHand"
+                >{{ currency.shortHand }} - {{ currency.name }}</mat-option
+              >
+            </mat-select>
+          </mat-form-field>
+      
+          <mat-form-field>
+            <mat-label>Amount</mat-label>
+            <input matInput placeholder="0" formControlName="fromAmount"/>
+          </mat-form-field>
+        </form>
+    </div>
+</div>
