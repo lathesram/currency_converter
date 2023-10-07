@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 import { ConvertPayload, CurrencyName } from 'src/app/api/api.enum';
 import { ExchangeRateAPIService } from 'src/app/api/api.service';
 import { CurrencyConverterService } from '../currency-conveter.service';
-import { debounceTime, distinctUntilChanged, map, tap } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, map, tap } from 'rxjs';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
@@ -50,9 +50,14 @@ export class CurrencyConverterComponent implements OnInit {
       }
     });
 
+    // Only to fetch the values
     this.exchangeRateAPIService
       .getCurrencies()
       .pipe(
+        catchError((err) => {
+          return err;
+        }),
+        tap((value) => console.log(value)),
         map((value: any) => {
           const keys: string[] = Object.keys(value);
           const values: string[] = Object.values(value);
@@ -67,7 +72,6 @@ export class CurrencyConverterComponent implements OnInit {
 
           return rates;
         }),
-        tap((value) => console.log(value)),
       )
       .subscribe((value) => {
         this.currencyList = value;
@@ -78,7 +82,7 @@ export class CurrencyConverterComponent implements OnInit {
     this._snackBar.open(message, 'close', {
       horizontalPosition: 'center',
       verticalPosition: 'top',
-      duration: 1000
+      duration: 1000,
     });
   }
 }
